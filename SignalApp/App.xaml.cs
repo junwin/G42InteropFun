@@ -14,7 +14,7 @@ namespace SignalApp
     /// </summary>
     public partial class App : Application
     {
-        public static Glue42 Glue;
+        //public static Glue42 Glue;
 
         protected override void OnStartup(StartupEventArgs e)
         {

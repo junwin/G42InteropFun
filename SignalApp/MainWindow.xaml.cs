@@ -115,7 +115,7 @@ namespace SignalApp
                 useAppManager: true,
                 useMetrics: true,
                 useContexts: false,
-                useGlueWindows: false,
+                useGlueWindows: true,
                 credentials: Tuple.Create(glueUser, ""),
                 advancedOptions: advancedOptions);
 
@@ -124,6 +124,13 @@ namespace SignalApp
 
             Glue.Interop.CreateServiceSubscription(service_,
                 (_, status) => Console.WriteLine($"{nameof(ISignalExecute)} is now {(status ? string.Empty : "in")}active"));
+
+            var gwOptions = Glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
+            gwOptions.WithType(GlueWindowType.Tab);
+            gwOptions.WithTitle("SignalApp");
+
+            // register the window and save the result
+            Glue.GlueWindows?.RegisterWindow(this, gwOptions);
 
             Console.WriteLine("Initialized Glue Interop");
         }
