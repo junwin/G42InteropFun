@@ -20,8 +20,8 @@ namespace SignalExecutor
         {
             base.OnStartup(e);
 
-            Glue = new Glue42();
-            Glue.Initialize("SignalExecutor");
+            //Glue = new Glue42();
+            //Glue.Initialize("SignalExecutor");
         }
     }
 }

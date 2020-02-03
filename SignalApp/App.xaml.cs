@@ -19,9 +19,10 @@ namespace SignalApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
+            /*
             Glue = new Glue42();
             Glue.Initialize("SignalApp");
+            */
         }
     }
 }
