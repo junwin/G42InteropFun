@@ -37,7 +37,7 @@ namespace SignalApp
             // Deserialize JSON
             var signals = JsonConvert.DeserializeObject<List<TradeSignal>>(text);
             TradeSignal ts;
-            service_.ExecuteSignal2(signals[0], out ts);
+            App.Service.ExecuteSignal2(signals[0], out ts);
         }
 
         //  We need some sort of interoperation  to execute the signal

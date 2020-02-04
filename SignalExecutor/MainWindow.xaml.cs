@@ -16,7 +16,7 @@ namespace SignalExecutor
         public MainWindow()
         {
             var gwOptions = App.Glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
-            wOptions.WithType(GlueWindowType.Tab);
+            gwOptions.WithType(GlueWindowType.Tab);
             gwOptions.WithTitle("SignalExecutor");
 
             // register the window and save the result
@@ -42,7 +42,22 @@ namespace SignalExecutor
             return true;
 
         }
-
+        private void btnRegister_Click(object sender, RoutedEventArgs e)
+        {
+            btnRegister.Tag = btnRegister.Tag != null ? (object)null : 5;
+            // register the service, and explicitly specify the interface we're registering since
+            // the Form has a lot of parent types
+            if (btnRegister.Tag != null)
+            {
+                App.Glue.Interop.RegisterService<ISignalExecute>(this);
+                btnRegister.Content = "Unregister";
+            }
+            else
+            {
+                App.Glue.Interop.UnregisterService<ISignalExecute>(this);
+                btnRegister.Content = "Register";
+            }
+        }
         void IDisposable.Dispose()
         {
             //throw new NotImplementedException();
