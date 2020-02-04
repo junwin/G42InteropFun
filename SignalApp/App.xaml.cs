@@ -1,26 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Tick42;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Tick42;
+﻿using SignalData;
 using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
-
-using SignalData;
+using System.Windows;
 using Tick42;
 
 namespace SignalApp
@@ -36,13 +19,12 @@ namespace SignalApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            
+
             //Glue = new Glue42();
             //Glue.Initialize("SignalApp");
 
             SynchronizationContext synchronizationContext = SynchronizationContext.Current;
             InitializeGlue(synchronizationContext);
-
         }
 
         private void InitializeGlue(SynchronizationContext synchronizationContext)

@@ -40,8 +40,8 @@ namespace SignalExecutor
         {
             updated = input;
             return true;
-
         }
+
         private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
             btnRegister.Tag = btnRegister.Tag != null ? (object)null : 5;
@@ -58,6 +58,7 @@ namespace SignalExecutor
                 btnRegister.Content = "Register";
             }
         }
+
         void IDisposable.Dispose()
         {
             //throw new NotImplementedException();
