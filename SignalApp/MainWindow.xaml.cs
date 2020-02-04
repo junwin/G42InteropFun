@@ -1,17 +1,9 @@
 ﻿using Newtonsoft.Json;
 using SignalData;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Tick42.Windows;
-using Newtonsoft.Json;
-
-using Tick42.Contexts;
-using Tick42.Windows;
-using Newtonsoft.Json;
-using System.Reflection;
 
 namespace SignalApp
 {
@@ -21,26 +13,21 @@ namespace SignalApp
 
         public MainWindow()
         {
-          
-                var gwOptions = App.Glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
-                gwOptions.WithType(GlueWindowType.Tab);
-                gwOptions.WithTitle("SignalApp");
+            var gwOptions = App.Glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
+            gwOptions.WithType(GlueWindowType.Tab);
+            gwOptions.WithTitle("SignalApp");
 
-                // register the window and save the result
-                App.Glue.GlueWindows?.RegisterWindow(this, gwOptions)?.ContinueWith(t =>
+            // register the window and save the result
+            App.Glue.GlueWindows?.RegisterWindow(this, gwOptions)?.ContinueWith(t =>
+            {
+                if (t.IsCompleted)
                 {
-                    if (t.IsCompleted)
-                    {
-                        GlueWindow = t.Result;
-                    }
-                }, TaskScheduler.FromCurrentSynchronizationContext());
-            
-           
+                    GlueWindow = t.Result;
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
             InitializeComponent();
         }
-
-
-
 
         private void btnSendSignal_Click(object sender, RoutedEventArgs e)
         {

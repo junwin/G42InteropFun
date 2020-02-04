@@ -1,35 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Tick42.Windows;
-using Newtonsoft.Json;
-using System.Reflection;
+﻿using SignalData;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SignalData;
-using Tick42;
-using Tick42.StartingContext;
-
-using Tick42.Contexts;
 using Tick42.Windows;
-using Newtonsoft.Json;
-using System.Reflection;
-
 
 namespace SignalExecutor
 {
@@ -42,7 +15,6 @@ namespace SignalExecutor
 
         public MainWindow()
         {
-
             var gwOptions = App.Glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
             wOptions.WithType(GlueWindowType.Tab);
             gwOptions.WithTitle("SignalExecutor");
@@ -56,8 +28,24 @@ namespace SignalExecutor
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
-
             InitializeComponent();
+        }
+
+        void ISignalExecute.ExecuteSignal(TradeSignal input)
+        {
+            //throw new NotImplementedException();
+        }
+
+        bool ISignalExecute.ExecuteSignal2(TradeSignal input, out TradeSignal updated)
+        {
+            updated = input;
+            return true;
+
+        }
+
+        void IDisposable.Dispose()
+        {
+            //throw new NotImplementedException();
         }
     }
 }
