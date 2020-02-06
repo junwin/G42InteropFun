@@ -1,10 +1,12 @@
 ﻿using SignalData;
 using System;
 using System.Diagnostics;
-using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using DOT.Core.Extensions;
 using Tick42;
+using Tick42.StartingContext;
 
 namespace SignalApp
 {
@@ -13,16 +15,13 @@ namespace SignalApp
     /// </summary>
     public partial class App : Application
     {
-        public static Glue42 Glue;
         public static ISignalExecute Service;
+        public static Task<Glue42> Glue;
+        private static MainWindow wnd_;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            //Glue = new Glue42();
-            //Glue.Initialize("SignalApp");
-
             SynchronizationContext synchronizationContext = SynchronizationContext.Current;
             InitializeGlue(synchronizationContext);
         }
@@ -41,32 +40,38 @@ namespace SignalApp
             Environment.SetEnvironmentVariable("GW_USERNAME", glueUser);
             //Environment.SetEnvironmentVariable("DEMO_MODE", Mode + "");
 
-            // The Glue42 facade provides a simplified programming
-            // interface over the core Glue42 components.
-            Glue = new Glue42();
 
-            Glue.Interop.ConnectionStatusChanged += (sender, args) => { Console.WriteLine($"Glue connection is now {args.Status}"); };
-            Glue.Interop.TargetStatusChanged += (sender, args) => Console.WriteLine($"{args.Status.State} target {args.Target}");
+            var initializeOptions = new InitializeOptions();
+            initializeOptions.SetSaveRestoreStateEndpoint(value => { 
+                    var tcs = new TaskCompletionSource<SignalState>();
+                    Dispatcher.BeginInvoke((Action) (() => tcs.TrySetResult((MainWindow as MainWindow).GetState())));
+                    return tcs.Task;
+                });
 
-            var advancedOptions = new Glue42.AdvancedOptions { SynchronizationContext = synchronizationContext };
+            Glue = Glue42.InitializeGlue(initializeOptions).ContinueWith(glue =>
+            {
+                // The Glue42 facade provides a simplified programming
+                // interface over the core Glue42 components.
+                var g = glue.Result;
+                g.Interop.ConnectionStatusChanged += (sender, args) =>
+                {
+                    Console.WriteLine($"Glue connection is now {args.Status}");
+                };
+                g.Interop.TargetStatusChanged += (sender, args) =>
+                    Console.WriteLine($"{args.Status.State} target {args.Target}");
 
-            Glue.Initialize(
-                Assembly.GetEntryAssembly().GetName().Name, // application name - required
-                useAgm: true,
-                useAppManager: true,
-                useMetrics: true,
-                useContexts: false,
-                useGlueWindows: true,
-                credentials: Tuple.Create(glueUser, ""),
-                advancedOptions: advancedOptions);
+                var advancedOptions = new Glue42.AdvancedOptions { SynchronizationContext = synchronizationContext };
 
-            Service = Glue.Interop.CreateServiceProxy<ISignalExecute>();
-            // let's track the status of the service target - if anybody has implemented it.
+                Service = g.Interop.CreateServiceProxy<ISignalExecute>();
+                // let's track the status of the service target - if anybody has implemented it.
 
-            Glue.Interop.CreateServiceSubscription(Service,
-                (_, status) => Console.WriteLine($"{nameof(ISignalExecute)} is now {(status ? string.Empty : "in")}active"));
+                g.Interop.CreateServiceSubscription(Service,
+                    (_, status) => Console.WriteLine($"{nameof(ISignalExecute)} is now {(status ? string.Empty : "in")}active"));
 
-            Console.WriteLine("Initialized Glue Interop");
+                Console.WriteLine("Initialized Glue Interop");
+
+                return g;
+            });
         }
     }
 }
