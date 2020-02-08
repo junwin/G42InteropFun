@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Glue42">
-      <HintPath>$(DOTNET_PACKAGES)\Glue42.2018.2105.0.0\lib\net45\Glue42.dll</HintPath>
+      <HintPath>$(DOTNET_PACKAGES)\Glue42.2018.2106.0.0\lib\net45\Glue42.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(DOTNET_PACKAGES)\newtonsoft.json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

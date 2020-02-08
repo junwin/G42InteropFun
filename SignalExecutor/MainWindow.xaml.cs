@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using SignalData;
 using Tick42;
@@ -13,28 +12,16 @@ namespace SignalExecutor
     public partial class MainWindow : Window, ISignalExecute
     {
         private Glue42 glue_;
-
         public MainWindow()
         {
             InitializeComponent();
 
-            App.Glue.ContinueWith(g =>
-            {
-                glue_ = g.Result;
-
-                var gwOptions = glue_.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
-                gwOptions.WithType(GlueWindowType.Tab);
-                gwOptions.WithTitle("SignalExecutor");
-
-                // register the window and save the result
-                glue_.GlueWindows?.RegisterWindow(this, gwOptions)?.ContinueWith(t =>
+            App.Glue.RegisterWindow(this, "SignalExecutor", GlueWindowType.Tab)
+                .ContinueWith(r =>
                 {
-                    if (t.IsCompleted)
-                    {
-                        GlueWindow = t.Result;
-                    }
-                }, TaskScheduler.FromCurrentSynchronizationContext());
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                    glue_ = App.Glue.Result;
+                    GlueWindow = r.Result;
+                });
         }
 
         public IGlueWindow GlueWindow { get; set; }
